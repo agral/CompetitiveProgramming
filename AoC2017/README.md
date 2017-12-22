@@ -23,5 +23,5 @@ Day 17 (Spinlock): [challenge](http://adventofcode.com/2017/day/17) | [solution]
 Day 18 (Duet): [challenge](http://adventofcode.com/2017/day/18) | [solution](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/18/ans.py)  
 Day 19 (A Series of Tubes): [challenge](http://adventofcode.com/2017/day/19) | [solution](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/19/ans.py)  
 Day 20 (Particle Swarm): [challenge](http://adventofcode.com/2017/day/20) | [solution](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/20/ans.py)  
-Day 21 (Fractal Art): [challenge](http://adventofcode.com/2017/day/21) | Solution not available yet.
+Day 21 (Fractal Art): [challenge](http://adventofcode.com/2017/day/21) | Solution not available yet.  
 Day 22 (Sporifica Virus): [challenge](http://adventofcode.com/2017/day/22) | [solution](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/22/ans.py)  
