@@ -1,4 +1,4 @@
-#!/usr/bin/env python3o
+#!/usr/bin/env python3
 
 """
 Solution to the challenge #21 of the "Advent of Code 2017" series.
@@ -26,149 +26,129 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-def Hash(squished_pattern):
-    result = 0
-    for c in range(len(squished_pattern)):
-        result *= 2
-        if squished_pattern[c] == "#":
-            result += 1
-    result += 100000 * len(squished_pattern)
-    return result
+""" The following code utilizes the nomenclature as stated:
 
-def unhash(number):
-    result = ""
-    while number > 0:
-        result += "#" if number % 2 == 1 else "."
-        number //= 2
-    return result[::-1] # returns a reversed string.
+                                .#.
+Normal pattern representation:  ..#
+                                ###
 
+Sparse pattern representation: ".#./..#/###"
+squished pattern representation: ".#...####"
+"""
 
-patterns = []
-expansions = dict()
+import re
 
-class Pattern:
-    def __init__(self, representation, expansion=None):
-        """ Creates a new instance of a Pattern class.
+def sparse_to_normal(sparse):
+    return [list(row) for row in sparse.split("/")]
 
-        Parameters:
-            size: the size of a tile containing a pattern - 2 or 3.
-            representation: a string representing a serialized pattern.
-            expansion: a string representing a serialized expansion
-                    of the pattern.
-        """
+def normal_to_sparse(normal):
+    return "/".join(["".join(row) for row in normal])
 
-        def flip(squished):
-            if self.size == 2:
-                flipped = [squished[1], squished[0], squished[3], squished[2]]
-            else:
-                flipped = [squished[2], squished[1], squished[0],
-                           squished[5], squished[4], squished[3],
-                           squished[8], squished[7], squished[6]]
-            return "".join(flipped)
+def sparse_to_squished(sparse):
+    squished = re.sub("/", "", sparse)
+    assert(len(squished) == 4 or len(squished) == 9)
+    return squished
 
 
-        def rot90(squished):
-            if self.size == 2:
-                rotated = [squished[3], squished[0], squished[2], squished[1]]
-            else:
-                rotated = [squished[6], squished[3], squished[0],
-                           squished[7], squished[4], squished[1],
-                           squished[8], squished[5], squished[2]]
-            return "".join(rotated)
+
+def flip(sparse):
+    if len(sparse) == 5:
+        flipped = [sparse[1], sparse[0], "/", sparse[4], sparse[3]]
+    elif len(sparse) == 11:
+        flipped =  [sparse[2], sparse[1], sparse[0], "/",
+                    sparse[6], sparse[5], sparse[4], "/",
+                    sparse[10], sparse[9], sparse[8]]
+    else:
+        raise ValueError("Illegal length of sparse pattern.")
+    return "".join(flipped)
 
 
-        self.size = 2 if len(representation) == 5 else 3
+def rot90(sparse):
+    if len(sparse) == 5:
+        rotated = [sparse[4], sparse[0], "/", sparse[3], sparse[1]]
+    elif len(sparse) == 11:
+        rotated =  [sparse[8], sparse[4], sparse[0], "/",
+                    sparse[9], sparse[5], sparse[1], "/",
+                    sparse[10], sparse[6], sparse[2]]
+    else:
+        raise ValueError("Illegal length of sparse pattern.")
+    return "".join(rotated)
 
-        self.expansion = [list(row) for row in expansion.split("/")]
 
-        self.rows = representation.split("/")
-        self.normal = "".join(self.rows)
-        flipped = flip(self.normal)
-        normal = self.normal
-        expansions[flipped] = self.expansion
-        expansions[normal] = self.expansion
+def load_expandable_patterns(patterns_file):
+    lines = [line.strip() for line in open(patterns_file, "r")]
+    expansions = dict()
+    for line in lines:
+        sparse_pattern, sparse_expansion = line.split(" => ")
+        flipped = flip(sparse_pattern)
+        expansions[sparse_pattern] = sparse_expansion
+        expansions[flipped] = sparse_expansion
+
         for i in range(3):
+            sparse_pattern = rot90(sparse_pattern)
             flipped = rot90(flipped)
-            normal = rot90(normal)
-            expansions[flipped] = self.expansion
-            expansions[normal] = self.expansion
+            expansions[sparse_pattern] = sparse_expansion
+            expansions[flipped] = sparse_expansion
+
+    print("{} expansions loaded.".format(len(expansions)))
+    return expansions
 
 
 class Board:
-    def __init__(self):
+    def __init__(self, expansions):
         self.size = 3
-        self.b = [[".", "#", "."],
-                  [".", ".", "#"],
-                  ["#", "#", "#"]]
+        self.b = sparse_to_normal(".#./..#/###")
+        self.expansions = expansions
 
     def grow(self):
-        newsize = self.size * 3 // 2 if self.size % 2 == 0 \
-                else self.size * 4 // 3
+        new_size = self.size*3//2 if self.size % 2 == 0 else self.size*4//3
+        square_size = 2 if self.size % 2 == 0 else 3
+        newb = [["."] * new_size for _ in range(new_size)]
 
-        print("Newsize: {}".format(newsize))
+        for y in range(self.size // square_size):
+            for x in range(self.size // square_size):
+                sparse_chunk = self.slice_to_sparse(
+                        square_size*x, square_size*y, square_size)
+                new_chunk = self.expansions[sparse_chunk]
 
-        skip = 2 if self.size % 2 == 0 else 3
-        newb = [["."] * newsize for _ in range(newsize)]
-
-        for y in range(self.size // skip):
-            for x in range(self.size // skip):
-                chunk = self.serialize_slice(skip*x, skip*y, skip)
-                newchunk = expansions[chunk]
-                #print("Chunk: ", end="")
-                #print(newchunk)
-
-                # Emplaces the expansion chunk on the new board:
-                Y = len(newchunk)
-                for row in range(Y):
-                    X = len(newchunk[row])
-                    for col in range(X):
-                        _y, _x = y*Y+row, x*X+col
-                        #print("self.size=={}, skip={}, X={}, Y={}".format(self.size, skip, X, Y))
-                        #print("Row={}, col={}, _y={}, _x={}".format(row, col, _y, _x))
-                        newb[y*Y+row][x*X+col] = newchunk[row][col]
-                print("Emplaced one chunk.")
-
-        self.size = newsize
+                # Emplaces the expanded chunk on the new board:
+                S = 3 if len(new_chunk) == 11 else 4
+                for row in range(S):
+                    for col in range(S):
+                        newb[S*y+row][S*x+col] = new_chunk[row * (S+1) + col]
+        self.size = new_size
         self.b = newb
 
-    def serialize_slice(self, x, y, size):
+    def slice_to_sparse(self, x, y, size):
         if size == 2:
-            result = "".join([self.b[y][x], self.b[y][x+1],
+            result = "".join([self.b[y][x], self.b[y][x+1], "/",
                               self.b[y+1][x], self.b[y+1][x+1]])
         elif size == 3:
-            result = "".join([self.b[y][x], self.b[y][x+1], self.b[y][x+2],
-                              self.b[y+1][x], self.b[y+1][x+1], self.b[y+1][x+2],
-                              self.b[y+2][x], self.b[y+2][x+1], self.b[y+2][x+2]
-                              ])
+            result = "".join([self.b[y][x], self.b[y][x+1], self.b[y][x+2], "/",
+                    self.b[y+1][x], self.b[y+1][x+1], self.b[y+1][x+2], "/",
+                    self.b[y+2][x], self.b[y+2][x+1], self.b[y+2][x+2]])
         else:
-            raise RuntimeError("serialize_slice() with size other than 2 or 3")
-
+            raise RuntimeError("slice_to_sparse() with size other than 2 or 3")
         return result
 
     def print(self):
         print("\n".join("".join(row) for row in self.b))
         print()
 
-    def alive_cells_count(self):
+    def count_active_cells(self):
         return sum([row.count("#") for row in self.b])
 
 
-data_file = "simple_input_21"
-data_file = "input_21"
-lines = [line.strip() for line in open(data_file, "r")]
-for line in lines:
-    (pat, exp) = line.split(" => ")
-    patterns.append(Pattern(pat, exp))
-print(len(expansions), "expansions in the map loaded.")
+data_files = ["simple_input_21"]
+#data_files = ["input_21"]
+for data_file in data_files:
+    print("Working with input file: {} ...".format(data_file))
 
-
-board = Board()
-print("Initial state:")
-board.print()
-print()
-
-for i in range(5):
-    print("Round #{}.".format(i+1))
-    board.grow()
-    print("Alive cells: {}".format(board.alive_cells_count()))
+    board = Board(load_expandable_patterns(data_file))
     board.print()
+
+    for i in range(5):
+        board.grow()
+        board.print()
+
+    print("Challenge A: {} cells are alive.".format(board.count_active_cells()))
