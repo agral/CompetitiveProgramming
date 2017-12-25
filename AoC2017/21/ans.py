@@ -65,7 +65,7 @@ def flip(sparse):
 
 def rot90(sparse):
     if len(sparse) == 5:
-        rotated = [sparse[4], sparse[0], "/", sparse[3], sparse[1]]
+        rotated = [sparse[3], sparse[0], "/", sparse[4], sparse[1]]
     elif len(sparse) == 11:
         rotated =  [sparse[8], sparse[4], sparse[0], "/",
                     sparse[9], sparse[5], sparse[1], "/",
@@ -78,7 +78,9 @@ def rot90(sparse):
 def load_expandable_patterns(patterns_file):
     lines = [line.strip() for line in open(patterns_file, "r")]
     expansions = dict()
+    print("{} rules detected in the rulebook.".format(len(lines)))
     for line in lines:
+        was_expansions = len(expansions)
         sparse_pattern, sparse_expansion = line.split(" => ")
         flipped = flip(sparse_pattern)
         expansions[sparse_pattern] = sparse_expansion
@@ -90,6 +92,7 @@ def load_expandable_patterns(patterns_file):
             expansions[sparse_pattern] = sparse_expansion
             expansions[flipped] = sparse_expansion
 
+        is_expansions = len(expansions)
     print("{} expansions loaded.".format(len(expansions)))
     return expansions
 
@@ -139,16 +142,26 @@ class Board:
         return sum([row.count("#") for row in self.b])
 
 
-data_files = ["simple_input_21"]
-#data_files = ["input_21"]
+data_files = ["simple_input_21", "input_21"]
+
 for data_file in data_files:
     print("Working with input file: {} ...".format(data_file))
 
     board = Board(load_expandable_patterns(data_file))
-    board.print()
 
     for i in range(5):
-        board.grow()
-        board.print()
+        try:
+            board.grow()
+            # board.print()
+        except KeyError:
+            break;
 
     print("Challenge A: {} cells are alive.".format(board.count_active_cells()))
+
+    for i in range(18-5):
+        try:
+            board.grow()
+        except KeyError:
+            break;
+
+    print("Challenge B: {} cells are alive.".format(board.count_active_cells()))
