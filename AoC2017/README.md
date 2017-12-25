@@ -1,6 +1,9 @@
 # Advent of Code 2017
+![Screenshot with 50 stars on AoC2017](https://raw.githubusercontent.com/aszczerbiak/CompetitiveProgramming/master/AoC2017/passed_aoc_2017.png)
+
 This repository contains solutions to the challenges from  
 the "Advent of Code 2017" series ([http://adventofcode.com/2017](http://adventofcode.com/2017)).  
+
 
 ### List of individual challenges:
 Day 01 (Inverse Captcha): [challenge](http://adventofcode.com/2017/day/1) | [solution](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/01/ans.py)  
@@ -27,6 +30,6 @@ Day 21 (Fractal Art): [challenge](http://adventofcode.com/2017/day/21) | [soluti
 Day 22 (Sporifica Virus): [challenge](http://adventofcode.com/2017/day/22) | [solution](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/22/ans.py)  
 Day 23 (Coprocessor Conflagration): [challenge](http://adventofcode.com/2017/day/23) | 
 [solution to part A](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/23/ans.py) |
-[solution to part B](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/Aoc2017/23/optimized_program.py)  
+[solution to part B](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/23/optimized_program.py)  
 Day 24 (Electromagnetic Moat): [challenge](http://adventofcode.com/2017/day/24) | [solution](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/24/ans.py)  
 Day 25 (The Halting Problem): [challenge](http://adventofcode.com/2017/day/25) | [solution](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/25/ans.py)  
