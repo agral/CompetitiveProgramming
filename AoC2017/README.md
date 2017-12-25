@@ -23,5 +23,10 @@ Day 17 (Spinlock): [challenge](http://adventofcode.com/2017/day/17) | [solution]
 Day 18 (Duet): [challenge](http://adventofcode.com/2017/day/18) | [solution](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/18/ans.py)  
 Day 19 (A Series of Tubes): [challenge](http://adventofcode.com/2017/day/19) | [solution](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/19/ans.py)  
 Day 20 (Particle Swarm): [challenge](http://adventofcode.com/2017/day/20) | [solution](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/20/ans.py)  
-Day 21 (Fractal Art): [challenge](http://adventofcode.com/2017/day/21) | Solution not available yet.  
+Day 21 (Fractal Art): [challenge](http://adventofcode.com/2017/day/21) | [solution](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/21/ans.py)  
 Day 22 (Sporifica Virus): [challenge](http://adventofcode.com/2017/day/22) | [solution](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/22/ans.py)  
+Day 23 (Coprocessor Conflagration): [challenge](http://adventofcode.com/2017/day/23) | 
+[solution to part A](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/23/ans.py) |
+[solution to part B](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/Aoc2017/23/optimized_program.py)  
+Day 24 (Electromagnetic Moat): [challenge](http://adventofcode.com/2017/day/24) | [solution](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/24/ans.py)  
+Day 25 (The Halting Problem): [challenge](http://adventofcode.com/2017/day/25) | [solution](https://github.com/aszczerbiak/CompetitiveProgramming/blob/master/AoC2017/25/ans.py)  
