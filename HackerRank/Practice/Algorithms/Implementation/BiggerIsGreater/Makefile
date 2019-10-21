@@ -2,10 +2,10 @@
 # Author:        Adam Graliński (adam@gralin.ski)
 # License:       MIT
 
-EXE_NAME_DEBUG=program
-EXE_NAME_TEST=test_program
+EXE_NAME_DEBUG=exe
+EXE_NAME_TEST=test_exe
 CXX=clang++
-CXXFLAGS=-Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -D_REENTRANT -std=c++17 -O2
+CXXFLAGS=-Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -D_REENTRANT -std=c++17 -O0
 LDFLAGS=
 LDLIBS=
 
@@ -28,7 +28,8 @@ OBJECTS_TEST_WITHOUT_MAIN=$(filter-out $(DIR_OBJ_TEST)/$(FILENAME_TEST_MAIN_OBJ)
 .PHONY: all check \
   clean cleanall cleanapp cleantest \
   run \
-  test
+  test \
+  verify
 
 all: $(DIR_BIN)/$(EXE_NAME_DEBUG) $(DIR_BIN)/$(EXE_NAME_TEST)
 
@@ -58,6 +59,9 @@ run: $(DIR_BIN)/$(EXE_NAME_DEBUG)
 
 test: $(DIR_BIN)/$(EXE_NAME_TEST)
 	@$(DIR_BIN)/$(EXE_NAME_TEST)
+
+verify: $(DIR_BIN)/$(EXE_NAME_DEBUG)
+	@VerifyHrAnswer.sh
 
 # Creates an application executable by linking all the app object files:
 $(DIR_BIN)/$(EXE_NAME_DEBUG): $(OBJECTS_APP)
