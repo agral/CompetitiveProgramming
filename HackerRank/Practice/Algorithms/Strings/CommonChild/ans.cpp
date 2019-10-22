@@ -2,7 +2,7 @@
  * Solution to the "CommonChild" challenge from HackerRank:
  * https://www.hackerrank.com/challenges/common-child/problem
  * Created on: 04.10.2019
- * Last modified: 04.10.2019
+ * Last modified: 22.10.2019
  * Author: Adam Gralinski (adam@gralin.ski)
  * License: MIT
  */
