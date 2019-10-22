@@ -2,7 +2,7 @@
  * Solution to the "Matrix Layer Rotation" challenge from HackerRank:
  * https://www.hackerrank.com/challenges/matrix-rotation-algo/problem
  * Created on: 16.09.2019
- * Last modified: 16.09.2019
+ * Last modified: 22.10.2019
  * Author: Adam Gralinski (adam@gralin.ski)
  * License: MIT
 **/
@@ -41,13 +41,13 @@ int main(int, char**)
     {
       *ib = matrix[y][ring];
       *(ib + half_ring_len) = matrix[height - 1 - y][width - 1 - ring];
-      ib++;
+      ++ib;
     }
     for (std::size_t x = ring; x < width - ring - 1; ++x)
     {
       *ib = matrix[height - 1 - ring][x];
       *(ib + half_ring_len) = matrix[ring][width - 1 - x];
-      ib++;
+      ++ib;
     }
 
     // Creates a rotated copy of the unraveled ring:
@@ -70,13 +70,13 @@ int main(int, char**)
     {
       matrix[y][ring] = *irb;
       matrix[height - 1 - y][width - 1 - ring] = *(irb + half_ring_len);
-      irb++;
+      ++irb;
     }
     for (std::size_t x = ring; x < width - ring - 1; ++x)
     {
       matrix[height - 1 - ring][x] = *irb;
       matrix[ring][width - 1 - x] = *(irb + half_ring_len);
-      irb++;
+      ++irb;
     }
   }
 
