@@ -2,7 +2,7 @@
  * Solution to the "Hackerland Radio Transmitters" challenge from HackerRank:
  * https://www.hackerrank.com/challenges/hackerland-radio-transmitters/problem
  * Created on: 22.06.2019
- * Last modified: 04.09.2019
+ * Last modified: 22.10.2019
  * Author: Adam Gralinski (adam@gralin.ski)
  * License: MIT
  */
