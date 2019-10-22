@@ -2,17 +2,19 @@
  * Solution to the "SherlockAndAnagrams" challenge from HackerRank:
  * https://www.hackerrank.com/challenges/sherlock-and-anagrams/problem
  * Created on: 05.10.2019
- * Last modified: 05.10.2019
+ * Last modified: 22.10.2019
  * Author: Adam Gralinski (adam@gralin.ski)
  * License: MIT
  */
 
+#include <array>
+#include <algorithm>
 #include <iostream>
 #include <string>
 
 bool isAnagram(std::string const& first, std::string const& second)
 {
-  int histogram[256] = {0};
+  std::array<int, 256> histogram = {0};
   for (auto const &f : first)
   {
     histogram[static_cast<unsigned char>(f)] += 1;
@@ -22,14 +24,7 @@ bool isAnagram(std::string const& first, std::string const& second)
     histogram[static_cast<unsigned char>(s)] -= 1;
   }
 
-  for (auto const &h : histogram)
-  {
-    if (h != 0)
-    {
-      return false;
-    }
-  }
-  return true;
+  return std::all_of(histogram.begin(), histogram.end(), [](int num){return num == 0;});
 }
 
 int main(int, char**)
