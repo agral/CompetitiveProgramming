@@ -1,13 +1,18 @@
+
 /**
  * Solution to the "Encryption" challenge from HackerRank:
  * https://www.hackerrank.com/challenges/encryption/problem
  * Created on: 01.09.2019
- * Last modified: 01.09.2019
+ * Last modified: 22.10.2019
  * Author: Adam Gralinski (adam@gralin.ski)
  * License: MIT
  */
 
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <cmath>
+#include <iostream>
+#include <string>
+#include <sstream>
 
 std::string encrypt(const std::string& in)
 {
@@ -16,8 +21,8 @@ std::string encrypt(const std::string& in)
   // Removes spaces from the input string:
   ans.erase(std::remove_if(ans.begin(), ans.end(), isspace), ans.end());
 
-  int dimY = std::round(std::sqrt(ans.length()));
-  int dimX = (dimY * dimY >= ans.length()) ? dimY : dimY + 1;
+  std::size_t dimY = std::round(std::sqrt(ans.length()));
+  std::size_t dimX = (dimY * dimY >= ans.length()) ? dimY : dimY + 1;
 
   std::stringstream encrypted;
 
