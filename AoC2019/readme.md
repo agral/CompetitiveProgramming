@@ -9,3 +9,4 @@ Solutions to the challenges from the "Advent of Code 2019" series
 - Day 04 ([Secure Container](https://adventofcode.com/2019/day/2)): [solution](https://github.com/agral/CompetitiveProgramming/blob/master/AoC2019/04/aoc2019_day04_ans.cpp)
 - Day 05 ([Sunny with a Chance of Asteroids](https://adventofcode.com/2019/day/5)): [solution](https://github.com/agral/CompetitiveProgramming/blob/master/AoC2019/05/aoc2019_day05_ans.cpp)
 - Day 06 ([Universal Orbit Map](https://adventofcode.com/2019/day/6)): [solution](https://github.com/agral/CompetitiveProgramming/blob/master/AoC2019/06/aoc2019_day06_ans.cpp)
+- Day 08 ([Space Image Format](https://adventofcode.com/2019/day/8)): [solution](https://github.com/agral/CompetitiveProgramming/blob/master/AoC2019/08/aoc2019_day08_ans.cpp)
