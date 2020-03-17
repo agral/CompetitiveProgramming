@@ -1,3 +1,12 @@
+/*
+ * Solution to the "SimpleArraySum" challenge from HackerRank:
+ * https://www.hackerrank.com/challenges/simple-array-sum/problem
+ * Created on: 17.03.2020
+ * Last modified: 17.03.2020
+ * Author: Adam Gralinski (adam@gralin.ski)
+ * License: MIT
+ */
+
 import java.io.*;
 import java.util.*;
 
