@@ -1,0 +1,5 @@
+# .exe extension is used for cpp solutions' binaries:
+*.exe
+
+# .class extension denotes compiled java code:
+*.class
