@@ -17,6 +17,7 @@ import re
 import sys
 import zipfile
 
+from datetime import date
 from bs4 import BeautifulSoup
 import requests
 
@@ -94,8 +95,8 @@ class HackerRankScraper():
     def parse_breadcrumb_path(self) -> None:
         """Reads a path that corresponds to the HR's classification
         of the type of this particular challenge, e.g. "Algorithms/Search".
-        Updates the values of members `breadcrumb_path`, `name_challenge`
-        and `dir_challenge`."""
+        Updates the values of members `breadcrumb_path`, `challenge_name`
+        and `challenge_dir`."""
         print("Extracting breadcrumb path... ")
         breadcrumb_div = self.soup.find("div", {
             "class": "community-header-breadcrumb-items"})
@@ -156,6 +157,82 @@ class HackerRankScraper():
             for filename in files:
                 fix_trailing_newline(os.path.join(root, filename))
 
+    def create_answer_file_cpp(self):
+        """Creates a skeleton CPP answer file with predefined contents."""
+        file_path = os.path.join(
+            self.challenge_dir,
+            "cpp",
+            f"{self.normalized_name}.cpp")
+        if os.path.exists(file_path):
+            print("C++ answer file already exists, not overwriting.")
+            return
+
+        # Makes the parent directory:
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+        current_date_string = f"{date.today():%d.%m.%Y}"
+        print(f"Creating a C++ answer file ({self.normalized_name}.cpp)...")
+        with open(file_path, "w") as file_handle:
+            file_handle.writelines([
+                "/**\n"
+                f" * Solution to the \"{self.challenge_name}\" ",
+                "challenge from HackerRank:\n",
+                f" * {self.params.url}\n"
+                f" * Created on: {current_date_string}\n",
+                f" * Last modified: ${current_date_string}\n",
+                " * Author: Adam Graliński (adam@gralin.ski)\n",
+                " * License: MIT\n",
+                " */\n",
+                "\n",
+                "#include <iostream>\n",
+                "\n",
+                "int main(int, char**)\n",
+                "{\n",
+                "  return 0;\n",
+                "}\n",
+                ])
+
+    def create_answer_file_java(self):
+        """Creates a skeleton JAVA answer file with predefined contents."""
+        file_path = os.path.join(
+            self.challenge_dir,
+            "java",
+            f"{self.normalized_name}.java")
+        if os.path.exists(file_path):
+            print("Java answer file already exists, not overwriting.")
+            return
+
+        # Makes the parent directory:
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+        current_date_string = f"{date.today():%d.%m.%Y}"
+        print(f"Creating a Java answer file ({self.normalized_name}.java)...")
+        with open(file_path, "w") as file_handle:
+            file_handle.writelines([
+                "/*\n"
+                f" * Solution to the \"{self.challenge_name}\" ",
+                "challenge from HackerRank:\n",
+                f" * {self.params.url}\n"
+                f" * Created on: {current_date_string}\n",
+                f" * Last modified: ${current_date_string}\n",
+                " * Author: Adam Graliński (adam@gralin.ski)\n",
+                " * License: MIT\n",
+                " */\n",
+                "\n",
+                "import java.io.*;\n",
+                "import java.util.*;\n",
+                "\n",
+                f"public class {self.normalized_name}\n",
+                "{\n",
+                "  private static final Scanner scanner = ",
+                "new Scanner(System.in);\n",
+                "\n",
+                "  public static void main(String[] args) {\n",
+                "    \n",
+                "  }\n",
+                "}\n",
+                ])
+
 
 def main():
     """An entry point to the application."""
@@ -177,6 +254,8 @@ def main():
     scraper = HackerRankScraper(args)
     scraper.download_challenge_pdf()
     scraper.download_testcases()
+    scraper.create_answer_file_cpp()
+    scraper.create_answer_file_java()
 
 
 if __name__ == "__main__":
