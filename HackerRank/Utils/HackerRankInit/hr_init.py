@@ -6,7 +6,7 @@
 #                on the challenge's category.
 # Options:       None
 # Created on:    20.03.2020
-# Last modified: 20.03.2020
+# Last modified: 21.03.2020
 # Author:        Adam Graliński (adam@gralin.ski)
 # License:       MIT
 
@@ -214,7 +214,7 @@ class HackerRankScraper():
                 "challenge from HackerRank:\n",
                 f" * {self.params.url}\n"
                 f" * Created on: {current_date_string}\n",
-                f" * Last modified: ${current_date_string}\n",
+                f" * Last modified: {current_date_string}\n",
                 " * Author: Adam Graliński (adam@gralin.ski)\n",
                 " * License: MIT\n",
                 " */\n",
