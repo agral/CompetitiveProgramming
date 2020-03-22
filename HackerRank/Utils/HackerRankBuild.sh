@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Name:          BuildHrAnswer
+# Name:          HackerRankBuild
 # Description:   Builds answers to HackerRank's challenge for a number of languages, if present.
 # Options:       --cpp|--java
 # Note:          The script needs to be run from the challenge's root directory.
@@ -19,7 +19,7 @@ abort() {
 }
 
 print_help() {
-  echo "BuildHrAnswer - build solutions to a HackerRank challenge for selected languages."
+  echo "HackerRankBuild - build solutions to a HackerRank challenge for selected languages."
   echo "    Options: [-h|--help] [--cpp|java]"
   echo "        --help - print this help message and exit. Alias: -h."
   echo "        --cpp - add C++ solution to the build list"

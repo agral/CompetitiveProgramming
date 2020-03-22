@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# Name:          VerifyHrAnswer
+# Name:          HackerRankVerify
 # Description:   Executes an answer to a HackerRank's challenge against all the testcases
 #                associated with it.
 # Options:       None, the script needs to be run from the challenge's root directory.
 #                (e.g. /path/to/hacker/rank/dir/Practice/Algorithms/Search/CountLuck)
 # Created on:    20.10.2019
-# Last modified: 20.03.2020
+# Last modified: 22.03.2020
 # Author:        Adam Graliński (adam@gralin.ski)
 # License:       MIT
 
