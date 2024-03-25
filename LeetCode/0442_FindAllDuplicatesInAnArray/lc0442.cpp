@@ -16,7 +16,7 @@ public:
       const int idx = abs(k) - 1;
       nums[idx] = -nums[idx];
       if (nums[idx] > 0) {
-        ans.push_back(abs(k));
+        ans.push_back(idx + 1);
       }
     }
     return ans;
