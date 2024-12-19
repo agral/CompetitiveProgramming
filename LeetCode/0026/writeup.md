@@ -1,6 +1,7 @@
 # 0026/Remove Duplicates from Sorted Array
 
 <https://leetcode.com/problems/remove-duplicates-from-sorted-array/>
+
 This problem asks to remove the duplicates from an integer array `nums`.
 The removal should be done in-place. `nums` is already sorted in nondecreasing order.
 
@@ -58,12 +59,16 @@ at the loop's end, L = 4; 4+1 = 5 is returned.
 
 ### Corner cases
 For the degenerated case of an array of length 1 the algorithm still works correctly.
-No modifications are made to the array in this case and the correct value of 1 is returned.
+The loop iterates a total of `0` times. No modifications are made to the array in this case and the correct value of 1 is returned.
 
 For the case of an array containing same integer repeated n times, `left` index never increases.
 At the end of the loop, no modifications to the input array are made and the correct value of 1 is returned.
 
 ### Complexity analysis
-Runtime: O(n), as `right` pointer has to traverse the entire `nums` array.
-Memory: O(1), the algorithm requires space to hold two `int` indices, `left` and `right`.
+**Runtime**: O(n), as `right` pointer has to traverse the entire `nums` array.
+
+**Space**: O(1), the algorithm requires space to hold two `int` indices, `left` and `right`.
+
+### Tags
+`Array`, `In place`, `Two pointers`
 
