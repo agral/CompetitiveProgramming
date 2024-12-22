@@ -1,7 +1,5 @@
 DO_EXAMPLE = True
 
-DIRS = [[-1, 0], [0, 1], [1, 0], [0, -1]] # North, East, South, West
-
 ARROWS = {
     "y": {
         -1: "^",
@@ -13,29 +11,59 @@ ARROWS = {
     }
 }
 
-NUM_KEYPAD = {
-    "7": (0, 0), "8": (0, 1), "9": (0, 2),
-    "4": (1, 0), "5": (1, 1), "6": (1, 2),
-    "1": (2, 0), "2": (2, 1), "3": (2, 2),
-                 "0": (3, 1), "A": (3, 2),
-}
 
-DIR_KEYPAD = {
-                 "^": (0, 1), "A": (0, 2),
-    "<": (1, 0), "v": (1, 1), ">": (1, 2),
-}
+class GenericPad:
+    FORBIDDEN = (None, None)
+    LAYOUT = {}
+    BEST_PATHS = {} # I have this feeling that I'll soon need to add memoization.
 
-def manhattan(y_start, x_start, y_end, x_end):
-    return abs(y_end - y_start) + abs(x_end - x_start)
-
-class Numpad:
-    FORBIDDEN = (3, 0)
     def __init__(self):
-        self.posY, self.posX = NUM_KEYPAD["A"][0], NUM_KEYPAD["A"][1]
+        self.posY, self.posX = None, None
 
-    def move_to(self, key):
+    def get_all_moves_for_keys(self, char_from, char_to):
+        pos_from, pos_to = self.LAYOUT[char_from], self.LAYOUT[char_to]
+        return self.generate_moves(pos_from, pos_to)
+
+    def get_all_moves_to(self, char_to):
+        pos_from = (self.posY, self.posX)
+        pos_to = self.LAYOUT[char_to]
+        return self.generate_moves(pos_from, pos_to)
+
+    def generate_moves(self, pos_from, pos_to, path_here=""):
+        ans = []
+        diffY, diffX = pos_to[0] - pos_from[0], pos_to[1] - pos_from[1]
+        if pos_from == self.FORBIDDEN:
+            return []
+
+        if diffY == 0 and diffX == 0:
+            ans.append(path_here)
+        else:
+            if diffY > 0:
+                ans += (self.generate_moves((pos_from[0]+1, pos_from[1]), pos_to, path_here + "v"))
+            elif diffY < 0:
+                ans += (self.generate_moves((pos_from[0]-1, pos_from[1]), pos_to, path_here + "^"))
+            if diffX > 0:
+                ans += (self.generate_moves((pos_from[0], pos_from[1]+1), pos_to, path_here + ">"))
+            elif diffX < 0:
+                ans += (self.generate_moves((pos_from[0], pos_from[1]-1), pos_to, path_here + "<"))
+
+        return ans
+
+class Numpad(GenericPad):
+    FORBIDDEN = (3, 0)
+    LAYOUT = {
+        "7": (0, 0), "8": (0, 1), "9": (0, 2),
+        "4": (1, 0), "5": (1, 1), "6": (1, 2),
+        "1": (2, 0), "2": (2, 1), "3": (2, 2),
+                     "0": (3, 1), "A": (3, 2),
+    }
+    def __init__(self):
+        self.posY, self.posX = self.LAYOUT["A"][0], self.LAYOUT["A"][1]
+
+    # unused, but amusing :-)
+    def old_move_to(self, key):
         ans = ""
-        targetY, targetX = NUM_KEYPAD[key][0], NUM_KEYPAD[key][1]
+        targetY, targetX = self.LAYOUT[key][0], self.LAYOUT[key][1]
         diffY, diffX = targetY - self.posY, targetX - self.posX
         if diffY == 0 and diffX == 0:
             return "A"
@@ -60,38 +88,20 @@ class Numpad:
         ans += "A"
         return ans
 
-    def get_all_moves_for_keys(self, char_from, char_to):
-        pos_from, pos_to = NUM_KEYPAD[char_from], NUM_KEYPAD[char_to]
-        return self.generate_moves(pos_from, pos_to)
 
-    def generate_moves(self, pos_from, pos_to, path_here=""):
-        ans = []
-        diffY, diffX = pos_to[0] - pos_from[0], pos_to[1] - pos_from[1]
-        if pos_from == self.FORBIDDEN:
-            return []
-
-        if diffY == 0 and diffX == 0:
-            ans.append(path_here)
-        else:
-            if diffY > 0:
-                ans += (self.generate_moves((pos_from[0]+1, pos_from[1]), pos_to, path_here + "v"))
-            elif diffY < 0:
-                ans += (self.generate_moves((pos_from[0]-1, pos_from[1]), pos_to, path_here + "^"))
-            if diffX > 0:
-                ans += (self.generate_moves((pos_from[0], pos_from[1]+1), pos_to, path_here + ">"))
-            elif diffX < 0:
-                ans += (self.generate_moves((pos_from[0], pos_from[1]-1), pos_to, path_here + "<"))
-
-        return ans
-
-
-class Keypad:
+class Keypad(GenericPad):
+    FORBIDDEN = (0, 0)
+    LAYOUT = {
+                     "^": (0, 1), "A": (0, 2),
+        "<": (1, 0), "v": (1, 1), ">": (1, 2),
+    }
     def __init__(self):
-        self.posY, self.posX = DIR_KEYPAD["A"][0], DIR_KEYPAD["A"][1]
+        self.posY, self.posX = self.LAYOUT["A"][0], self.LAYOUT["A"][1]
 
-    def move_to(self, key):
+    # again unused, but pretty fly (if it would have worked)
+    def old_move_to(self, key):
         ans = ""
-        targetY, targetX = DIR_KEYPAD[key][0], DIR_KEYPAD[key][1]
+        targetY, targetX = self.LAYOUT[key][0], self.LAYOUT[key][1]
         diffY, diffX = targetY - self.posY, targetX - self.posX
         if diffY == 0 and diffX == 0:
             return "A"
@@ -125,6 +135,7 @@ class Keypad:
         ans += "A"
         return ans
 
+
 def main():
     with open("example.txt" if DO_EXAMPLE else "input.txt", "r") as file:
         codes = [line.strip() for line in file]
@@ -132,20 +143,45 @@ def main():
         n = Numpad()
         k1 = Keypad()
         k2 = Keypad()
-        for code in codes:
-            seq_numpad = "".join([n.move_to(key) for key in code])
-            seq_k1 = "".join([k1.move_to(key) for key in seq_numpad])
-            seq_k2 = "".join([k2.move_to(key) for key in seq_k1])
 
-            print(f"{seq_k2} ({len(seq_k2)})")
-            print(f"{seq_k1}")
-            print(f"{seq_numpad}")
-            print(f"{code}")
-            print()
+        if False:
+            for code in codes:
+                print(code)
+                for key in code:
+                    seq_numpad = n.get_all_moves_to(key)
+                    print(seq_numpad)
 
-        moves = n.get_all_moves_for_keys("A", "1")
+        if False:
+            for code in codes:
+                seq_numpad = "".join([n.move_to(key) for key in code])
+                seq_k1 = "".join([k1.move_to(key) for key in seq_numpad])
+                seq_k2 = "".join([k2.move_to(key) for key in seq_k1])
+
+                print(f"{seq_k2} ({len(seq_k2)})")
+                print(f"{seq_k1}")
+                print(f"{seq_numpad}")
+                print(f"{code}")
+                print()
+
+        # Manual validation of move sequence generators:
+        # (manual verification passed)
+        moves = n.get_all_moves_for_keys("A", "7")
         print(moves)
         moves = n.get_all_moves_for_keys("1", "A")
+        print(moves)
+        print()
+        moves = k1.get_all_moves_for_keys("A", "<")
+        print(moves)
+        moves = k1.get_all_moves_for_keys("<", "^")
+        print(moves)
+        moves = k1.get_all_moves_for_keys("^", ">")
+        print(moves)
+        moves = k1.get_all_moves_for_keys(">", "A")
+        print(moves)
+        print()
+        moves = k1.get_all_moves_to("<")
+        print(moves)
+        moves = k1.get_all_moves_to("v")
         print(moves)
 
 if __name__ == "__main__":
