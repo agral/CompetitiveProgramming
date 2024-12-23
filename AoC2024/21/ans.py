@@ -1,4 +1,6 @@
-DO_EXAMPLE = True
+import itertools
+
+DO_EXAMPLE = False
 
 ARROWS = {
     "y": {
@@ -11,7 +13,6 @@ ARROWS = {
     }
 }
 
-
 class GenericPad:
     FORBIDDEN = (None, None)
     LAYOUT = {}
@@ -22,12 +23,16 @@ class GenericPad:
 
     def get_all_moves_for_keys(self, char_from, char_to):
         pos_from, pos_to = self.LAYOUT[char_from], self.LAYOUT[char_to]
-        return self.generate_moves(pos_from, pos_to)
+        ans = self.generate_moves(pos_from, pos_to)
+        (self.posY, self.posX) = pos_to
+        return ans
 
     def get_all_moves_to(self, char_to):
         pos_from = (self.posY, self.posX)
         pos_to = self.LAYOUT[char_to]
-        return self.generate_moves(pos_from, pos_to)
+        ans = self.generate_moves(pos_from, pos_to)
+        (self.posY, self.posX) = pos_to
+        return ans
 
     def generate_moves(self, pos_from, pos_to, path_here=""):
         ans = []
@@ -36,7 +41,7 @@ class GenericPad:
             return []
 
         if diffY == 0 and diffX == 0:
-            ans.append(path_here)
+            ans.append(path_here + "A")
         else:
             if diffY > 0:
                 ans += (self.generate_moves((pos_from[0]+1, pos_from[1]), pos_to, path_here + "v"))
@@ -47,6 +52,16 @@ class GenericPad:
             elif diffX < 0:
                 ans += (self.generate_moves((pos_from[0], pos_from[1]-1), pos_to, path_here + "<"))
 
+        return ans
+
+    def find_input(self, desired_output):
+        ans = []
+        for key in desired_output:
+            sequence = self.get_all_moves_to(key)
+            if len(ans) == 0:
+                ans = sequence[:]
+            else:
+                ans = [(z[0] + z[1]) for z in list(itertools.product(ans, sequence))]
         return ans
 
 class Numpad(GenericPad):
@@ -135,6 +150,8 @@ class Keypad(GenericPad):
         ans += "A"
         return ans
 
+def get_numeric_part(code):
+    return int(code[:-1])
 
 def main():
     with open("example.txt" if DO_EXAMPLE else "input.txt", "r") as file:
@@ -144,45 +161,21 @@ def main():
         k1 = Keypad()
         k2 = Keypad()
 
-        if False:
-            for code in codes:
-                print(code)
-                for key in code:
-                    seq_numpad = n.get_all_moves_to(key)
-                    print(seq_numpad)
+        A, B = 0, 0
 
-        if False:
-            for code in codes:
-                seq_numpad = "".join([n.move_to(key) for key in code])
-                seq_k1 = "".join([k1.move_to(key) for key in seq_numpad])
-                seq_k2 = "".join([k2.move_to(key) for key in seq_k1])
+        for i, code in enumerate(codes):
+            print(f"\rCalculating code #{i+1}/{len(codes)} [{code}]...", end="", flush=True)
+            ways_n = n.find_input(code)
+            ways_k1 = []
+            for way_n in ways_n:
+                ways_k1 += k1.find_input(way_n)
+            ways_k2 = []
+            for way_k1 in ways_k1:
+                ways_k2 += k2.find_input(way_k1)
+            min_length = min([len(way_k2) for way_k2 in ways_k2])
+            A += min_length * get_numeric_part(code)
 
-                print(f"{seq_k2} ({len(seq_k2)})")
-                print(f"{seq_k1}")
-                print(f"{seq_numpad}")
-                print(f"{code}")
-                print()
-
-        # Manual validation of move sequence generators:
-        # (manual verification passed)
-        moves = n.get_all_moves_for_keys("A", "7")
-        print(moves)
-        moves = n.get_all_moves_for_keys("1", "A")
-        print(moves)
-        print()
-        moves = k1.get_all_moves_for_keys("A", "<")
-        print(moves)
-        moves = k1.get_all_moves_for_keys("<", "^")
-        print(moves)
-        moves = k1.get_all_moves_for_keys("^", ">")
-        print(moves)
-        moves = k1.get_all_moves_for_keys(">", "A")
-        print(moves)
-        print()
-        moves = k1.get_all_moves_to("<")
-        print(moves)
-        moves = k1.get_all_moves_to("v")
-        print(moves)
+        print(f"\nAnswer A: {A}")
 
 if __name__ == "__main__":
     main()
