@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -21,9 +22,13 @@ func main() {
 
 	scanner := bufio.NewScanner(file)
 	silver := 0
+	gold := 0
+	digits := map[string]int{
+		"one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+		"six": 6, "seven": 7, "eight": 8, "nine": 9,
+	}
 	for scanner.Scan() {
 		line := scanner.Text()
-		fmt.Println(line)
 
 		first := 0
 		last := len(line) - 1
@@ -43,7 +48,22 @@ func main() {
 		tens := int(line[first] - '0')
 		ones := int(line[last] - '0')
 		silver += (10*tens + ones)
+
+		for k, v := range digits {
+			firstIdx := strings.Index(line, k)
+			lastIdx := strings.LastIndex(line, k)
+			if firstIdx >= 0 && firstIdx < first {
+				first = firstIdx
+				tens = v
+			}
+			if lastIdx > last {
+				last = lastIdx
+				ones = v
+			}
+		}
+		gold += (10*tens + ones)
+
 	}
 	fmt.Printf("Silver: %d\n", silver)
-
+	fmt.Printf("Gold: %d\n", gold)
 }
