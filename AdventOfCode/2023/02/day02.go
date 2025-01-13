@@ -34,6 +34,9 @@ func main() {
 		// silver: Can this game be realized with a bag of 12 red, 13 green, and 14 blue cubes?
 		isValid := true
 
+		// gold: Find the minimum amount of red, green, blue cubes that make each game possible.
+		red, green, blue := 0, 0, 0
+
 		sGames := strings.Split(sGamesAll, "; ")
 		for _, sGame := range sGames {
 			sCubes := strings.Split(sGame, ", ")
@@ -48,22 +51,27 @@ func main() {
 					if count > 12 {
 						isValid = false
 					}
+					red = max(red, count)
 				case "green":
 					if count > 13 {
 						isValid = false
 					}
+					green = max(green, count)
 				case "blue":
 					if count > 14 {
 						isValid = false
 					}
+					blue = max(blue, count)
 				default: // color other than red, green and blue
 					isValid = false
+					log.Fatal("This color is neither red, green nor blue!")
 				}
 			}
 		}
 		if isValid {
 			silver += numGame
 		}
+		gold += red * green * blue
 
 	}
 	fmt.Printf("Silver: %d\n", silver)
