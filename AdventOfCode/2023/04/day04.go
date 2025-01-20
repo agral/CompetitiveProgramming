@@ -14,6 +14,7 @@ type Card struct {
 	number  int
 	winning []int
 	owned   []int
+	score   int
 }
 
 func makeCard(input string) Card {
@@ -27,7 +28,6 @@ func makeCard(input string) Card {
 	owned := []int{}
 	sWinning, sOwned := parts[0], parts[1]
 	w := strings.Split(sWinning, " ")
-	fmt.Printf("%q\n", sWinning)
 	for _, val := range w {
 		num, _ := strconv.Atoi(val)
 		winning = append(winning, num)
@@ -37,7 +37,20 @@ func makeCard(input string) Card {
 		num, _ := strconv.Atoi(val)
 		owned = append(owned, num)
 	}
-	return Card{cardno, winning, owned}
+	// sc:
+	sc := 0
+	for _, w := range winning {
+		for _, o := range owned {
+			if w == o {
+				sc += 1
+			}
+		}
+	}
+	score := 0
+	if sc > 0 {
+		score = 1 << (sc - 1)
+	}
+	return Card{cardno, winning, owned, score}
 }
 
 func main() {
@@ -54,8 +67,9 @@ func main() {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
-		fmt.Println(line)
-		fmt.Println(makeCard(line))
+		c := makeCard(line)
+		silver += c.score
+		//fmt.Println(c)
 	}
 	fmt.Printf("Silver: %d\n", silver)
 	fmt.Printf("Gold: %d\n", gold)
