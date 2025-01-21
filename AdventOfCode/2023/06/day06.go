@@ -15,9 +15,9 @@ func getLine(scanner *bufio.Scanner) string {
 	return scanner.Text()
 }
 
-func getNumWaysToBeat(time int, dist int) int {
+func getNumWaysToBeat(time int64, dist int64) int {
 	ans := 0
-	for holdTime := 1; holdTime < time; holdTime++ {
+	for holdTime := int64(1); holdTime < time; holdTime++ {
 		raceTime := time - holdTime
 		if raceTime*holdTime > dist {
 			ans++
@@ -49,11 +49,16 @@ func main() {
 	strDist := strings.Split(strDistFull, " ")[1:]
 
 	for i := 0; i < len(strTime); i++ {
-		time, _ := strconv.Atoi(strTime[i])
-		dist, _ := strconv.Atoi(strDist[i])
+		time, _ := strconv.ParseInt(strTime[i], 10, 64)
+		dist, _ := strconv.ParseInt(strDist[i], 10, 64)
 		silver *= getNumWaysToBeat(time, dist)
 	}
-
 	fmt.Printf("Silver: %d\n", silver)
+
+	strSingleTime := strings.Join(strTime, "")
+	strSingleDist := strings.Join(strDist, "")
+	singleTime, _ := strconv.ParseInt(strSingleTime, 10, 64)
+	singleDist, _ := strconv.ParseInt(strSingleDist, 10, 64)
+	gold = getNumWaysToBeat(singleTime, singleDist)
 	fmt.Printf("Gold: %d\n", gold)
 }
