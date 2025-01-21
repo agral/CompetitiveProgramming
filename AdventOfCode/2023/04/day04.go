@@ -11,10 +11,11 @@ import (
 )
 
 type Card struct {
-	number  int
-	winning []int
-	owned   []int
-	score   int
+	number   int
+	winning  []int
+	owned    []int
+	matching int
+	count    int
 }
 
 func makeCard(input string) Card {
@@ -37,20 +38,24 @@ func makeCard(input string) Card {
 		num, _ := strconv.Atoi(val)
 		owned = append(owned, num)
 	}
-	// sc:
-	sc := 0
+	// calculate the number of matching cards.
+	// There's no intersection() / union() in golang; has to be done manually.
+	matching := 0
 	for _, w := range winning {
 		for _, o := range owned {
 			if w == o {
-				sc += 1
+				matching += 1
 			}
 		}
 	}
-	score := 0
-	if sc > 0 {
-		score = 1 << (sc - 1)
+	return Card{cardno, winning, owned, matching, 1}
+}
+
+func (c Card) score() int {
+	if c.matching == 0 {
+		return 0
 	}
-	return Card{cardno, winning, owned, score}
+	return 1 << (c.matching - 1)
 }
 
 func main() {
@@ -64,12 +69,26 @@ func main() {
 	defer file.Close()
 
 	silver, gold := 0, 0
+	cards := []Card{} // cards[i] holds a Card with i+1 number; e.g. cards[0] is Card 1 and so on.
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
 		c := makeCard(line)
-		silver += c.score
-		//fmt.Println(c)
+		silver += c.score()
+		cards = append(cards, c)
+		// Make sure that the input consists of cards numbered from 1 to n,
+		// in order. This is not guaranteed, but I want to rely on it.
+		if len(cards) != c.number {
+
+		}
+	}
+	for i := 0; i < len(cards); i++ {
+		// the cards are so arranged that card_num + 1 + matching < len(cards)
+		for j := i + 1; j < i+1+cards[i].matching; j++ {
+			cards[j].count += cards[i].count
+		}
+		//fmt.Printf("There are %d cards #%d\n", cards[i].count, cards[i].number)
+		gold += cards[i].count
 	}
 	fmt.Printf("Silver: %d\n", silver)
 	fmt.Printf("Gold: %d\n", gold)
