@@ -14,20 +14,18 @@ public:
             if (std::isdigit(c)) {
                 numConv *= 10;
                 numConv += (c - '0');
-            } else {
-                if (c == '[') {
-                    stack.push_back(std::pair<std::string, int>(builtString, numConv));
-                    numConv = 0;
-                    builtString = "";
-                }
-                else if (c == ']') {
-                    const auto [stackString, numRepeats] = stack.back();
-                    stack.pop_back();
-                    builtString = stackString + makeRepeatedString(builtString, numRepeats);
-                }
-                else {
-                    builtString += c;
-                }
+            } else if (c == '[') {
+                stack.push_back(std::pair<std::string, int>(builtString, numConv));
+                numConv = 0;
+                builtString = "";
+            }
+            else if (c == ']') {
+                const auto [stackString, numRepeats] = stack.back();
+                stack.pop_back();
+                builtString = stackString + makeRepeatedString(builtString, numRepeats);
+            }
+            else {
+                builtString += c;
             }
         }
 
@@ -42,7 +40,6 @@ private:
         }
         return ss.str();
     }
-    std::size_t cursor;
 };
 
 int main() {
@@ -59,5 +56,4 @@ int main() {
         std::string input = "2[abc]3[cd]ef";
         assert(s.decodeString(input) == "abcabccdcdcdef");
     }
-
 }
