@@ -1,0 +1,58 @@
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"log"
+	"os"
+	"strings"
+)
+
+type Node struct {
+	Left  string
+	Right string
+}
+
+var nodes = make(map[string]Node)
+
+func getLine(scanner *bufio.Scanner) string {
+	scanner.Scan()
+	return scanner.Text()
+}
+
+func main() {
+	inputFile := "example.txt"
+	if len(os.Args) < 2 {
+		fmt.Printf("Input file not specified. Using %q.\n", inputFile)
+	} else {
+		inputFile = os.Args[1]
+	}
+	file, err := os.Open(inputFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	directions := getLine(scanner)
+	getLine(scanner)
+	for scanner.Scan() {
+		line := scanner.Text()
+		line = line[:len(line)-1]
+		split := strings.Split(line, " = (")
+		leftRight := strings.Split(split[1], ", ")
+		nodes[split[0]] = Node{leftRight[0], leftRight[1]}
+	}
+	silver, gold := 0, 0
+	currentNode := "AAA"
+	for currentNode != "ZZZ" {
+		if directions[silver%len(directions)] == 'L' {
+			currentNode = nodes[currentNode].Left
+		} else {
+			currentNode = nodes[currentNode].Right
+		}
+		silver++
+	}
+	fmt.Printf("Silver: %d\n", silver)
+	fmt.Printf("Gold: %d\n", gold)
+}
