@@ -25,6 +25,22 @@ func predictNext(sequence []int) int {
 	}
 }
 
+func predictPrev(sequence []int) int {
+	diff := make([]int, len(sequence)-1)
+	isOnlyZeroes := true
+	for i := 0; i < len(sequence)-1; i++ {
+		diff[i] = sequence[i+1] - sequence[i]
+		if diff[i] != 0 {
+			isOnlyZeroes = false
+		}
+	}
+	if isOnlyZeroes {
+		return sequence[0]
+	} else {
+		return sequence[0] - predictPrev(diff)
+	}
+}
+
 func main() {
 	inputFile := "example.txt"
 	if len(os.Args) < 2 {
@@ -49,6 +65,7 @@ func main() {
 		}
 
 		silver += predictNext(nums)
+		gold += predictPrev(nums)
 	}
 	fmt.Printf("Silver: %d\n", silver)
 	fmt.Printf("Gold: %d\n", gold)
