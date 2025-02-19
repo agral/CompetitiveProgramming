@@ -1,5 +1,6 @@
-# .exe extension is used for cpp solutions' binaries:
-*.exe
+# "test" is used as compiled c++ binary name, don't commit these files:
+**/cpp/test
+
 
 # .class extension denotes compiled java code:
 *.class
