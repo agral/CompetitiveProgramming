@@ -1,6 +1,26 @@
 package lc1524
 
 func numOfSubarrays(arr []int) int {
+	// Runtime complexity: O(n)
+	// Aux space complexity: O(1)
+	const MOD = 1e9 + 7
+	dp_even := 0
+	dp_odd := 0
+	ans := 0
+	for _, num := range arr {
+		if num%2 == 0 {
+			dp_even += 1
+		} else {
+			dp_even, dp_odd = dp_odd, dp_even+1
+		}
+		ans = (ans + dp_odd) % MOD
+	}
+	return ans
+}
+
+func numOfSubarrays_firstAttempt(arr []int) int {
+	// Runtime complexity: O(n)
+	// Aux space complexity: O(n) - two arrays of size len(arr)+1 are allocated.
 	const MOD = 1e9 + 7
 	SZ := len(arr)
 
