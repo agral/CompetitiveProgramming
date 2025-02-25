@@ -1,0 +1,22 @@
+package lc1524
+
+func numOfSubarrays(arr []int) int {
+	const MOD = 1e9 + 7
+	SZ := len(arr)
+
+	dp_even := make([]int, SZ+1) // count of subarrays that end in arr[i-1]
+	dp_odd := make([]int, SZ+1)  // with an even / odd sum, respectively.
+	ans := 0
+	for i := range SZ {
+		if arr[i]%2 == 0 {
+			dp_even[i+1] = dp_even[i] + 1
+			dp_odd[i+1] = dp_odd[i]
+		} else {
+			dp_even[i+1] = dp_odd[i]
+			dp_odd[i+1] = dp_even[i] + 1
+		}
+		ans = (ans + dp_odd[i+1]) % MOD
+	}
+
+	return ans
+}
