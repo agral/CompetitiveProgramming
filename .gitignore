@@ -1,6 +1,9 @@
 # "test" is used as compiled c++ binary name, don't commit these files:
 **/cpp/test
 
-
 # .class extension denotes compiled java code:
 *.class
+
+# python's unit tests leave some .pyc junk in __pycache__. Don't commit these.
+# In fact ignore the entire __pycache__ contents.
+**/python/__pycache__/
