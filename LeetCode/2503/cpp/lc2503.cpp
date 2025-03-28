@@ -1,17 +1,70 @@
 #include <iostream>
+#include <queue>
 #include <vector>
 #include <sstream>
+#include <algorithm>
 
-// Runtime complexity:
-// Auxiliary space complexity:
+struct GPV { // Grid Poisition & Value
+    int h;
+    int w;
+    int value; // taken at grid[h][w]
+};
+
+struct QueryIndex {
+    int query;
+    int index;
+};
 
 class Solution {
- public:
-  std::vector<int> maxPoints(std::vector<std::vector<int>>& grid,
-                             std::vector<int>& queries) {
-    std::vector<int> ans = {};
-    return ans;
-  }
+public:
+    std::vector<int> maxPoints(std::vector<std::vector<int>>& grid, std::vector<int>& queries) {
+        const int H = grid.size();
+        const int W = grid[0].size();
+        const int DIRS[4][2] = {{1, 0}, {0, -1}, {-1, 0}, {0, 1}};
+        std::vector<int> ans(queries.size());
+
+        std::vector<std::vector<bool>> seen(H, std::vector<bool>(W));
+        auto cmp = [](const GPV& lhs, const GPV& rhs) { return lhs.value > rhs.value; };
+        std::priority_queue<GPV, std::vector<GPV>, decltype(cmp)> minHeap(cmp);
+        int acc = 0;
+        minHeap.emplace(0, 0, grid[0][0]);
+        seen[0][0] = true;
+
+        for (const auto& [query, index]: getQueryIndexes(queries)) {
+            while (!minHeap.empty()) {
+                const auto [h, w, value] = minHeap.top();
+                std::cout << "h=" << h << ", w=" << w << ", value=" << value << "\n";
+                minHeap.pop();
+                if (value >= query) {
+                    // Return (h, w, value) back to minHeap, as the smallest neighbor is still larger than query.
+                    minHeap.emplace(h, w, value);
+                    break; // directly go-to ans setting, by breaking the while-loop. Important.
+                }
+                acc += 1;
+                for (const auto& [dh, dw]: DIRS) {
+                    int hh = h + dh;
+                    int ww = w + dw;
+                    if (hh < 0 || hh == H || ww < 0 || ww == W || seen[hh][ww]) {
+                        continue;
+                    }
+                    minHeap.emplace(hh, ww, grid[hh][ww]);
+                    seen[hh][ww] = true;
+                }
+            }
+            ans[index] = acc;
+        }
+
+        return ans;
+    }
+private:
+    std::vector<QueryIndex> getQueryIndexes(std::vector<int>& queries) {
+        std::vector<QueryIndex> ans;
+        for (int i = 0; i < queries.size(); ++i) {
+            ans.push_back({queries[i], i});
+        }
+        std::ranges::sort(ans, std::ranges::less{}, [](const QueryIndex& qi) { return qi.query; });
+        return ans;
+    }
 };
 
 template<typename T>
