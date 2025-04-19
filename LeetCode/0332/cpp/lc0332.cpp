@@ -1,13 +1,35 @@
+#include <algorithm>
 #include <iostream>
+#include <set>
+#include <unordered_map>
 #include <vector>
 #include <sstream>
 
-// Runtime complexity:
-// Auxiliary space complexity:
+// Runtime complexity:O(XlogX), where X is the size (length) of the constructed graph
+// Auxiliary space complexity: O(X)
 class Solution {
 public:
     std::vector<std::string> findItinerary(std::vector<std::vector<std::string>>& tickets) {
-        return {};
+        std::vector<std::string> ans{};
+        std::unordered_map<std::string, std::multiset<std::string>> graph{};
+
+        for (const std::vector<std::string>& ticket: tickets) {
+            graph[ticket[0]].insert(ticket[1]);
+        }
+        // Start from the JFK and construct the answer recursively checking all the available connections.
+        dfs(graph, "JFK", ans);
+        std::reverse(ans.begin(), ans.end());
+        return ans;
+    }
+private:
+    void dfs(std::unordered_map<std::string, std::multiset<std::string>>& graph,
+             const std::string& node, std::vector<std::string>& ans) {
+        while (graph.contains(node) && !graph[node].empty()) {
+            const std::string new_node = *graph[node].begin();
+            graph[node].erase(graph[node].begin());
+            dfs(graph, new_node, ans);
+        }
+        ans.push_back(node);
     }
 };
 
