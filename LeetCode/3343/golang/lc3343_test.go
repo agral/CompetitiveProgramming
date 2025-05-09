@@ -19,3 +19,24 @@ func Test_countBalancedPermutations(t *testing.T) {
 		}
 	}
 }
+
+func Test_factorial(t *testing.T) {
+	testcases := []struct {
+		input    int
+		expected int64
+	}{
+		{0, 1},
+		{1, 1},
+		{2, 2},
+		{3, 6},
+		{4, 24},
+		{5, 120},
+		{10, 3628800},
+	}
+	for _, tc := range testcases {
+		actual := factorial(tc.input)
+		if actual != tc.expected {
+			t.Errorf("factorial(%d) failed: want %d, got %d", tc.input, tc.expected, actual)
+		}
+	}
+}
