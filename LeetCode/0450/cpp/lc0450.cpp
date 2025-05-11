@@ -53,14 +53,50 @@ bool is_same(TreeNode *tree1, TreeNode *tree2) {
            is_same(tree1->right, tree2->right);
 }
 
-// Runtime complexity:
-// Auxiliary space complexity:
+// Runtime complexity: O(h),
+// Auxiliary space complexity: O(h),
+// where h is the height of the BST; this is equal to O(logn) in balanced BSTs.
 class Solution {
 public:
     TreeNode* deleteNode(TreeNode* root, int key) {
-        TreeNode* ans = {};
-        // TODO 
-        return ans;
+        if (root == nullptr) {
+            return nullptr;
+        }
+        if (root->val == key) {
+            // iff the node has only one descendant (left or right), it will take place
+            // of the deleted root node:
+            if (root->left == nullptr) {
+                return root->right;
+            }
+            if (root->right == nullptr) {
+                return root->left;
+            }
+
+            // Root node has both descendants; need to keep the tree balanced
+            // by swapping root with a minimal node. This operation needs
+            // to be done recursively; this simple recursive swap keeps
+            // the tree balanced (so it's still a BST, not just any binary tree).
+            TreeNode* minimal = getMinimalNode(root->right);
+            root->right = deleteNode(root->right, minimal->val);
+            minimal->left = root->left;
+            minimal->right = root->right;
+            root = minimal;
+            // note: I'm not bothering with `free()`/`delete`ing the removed root node.
+            // Any real implementation needs to take care of that.
+        }
+        else if (root->val < key) {
+            root->right = deleteNode(root->right, key);
+        } else { // implied: root->val > key
+            root->left = deleteNode(root->left, key);
+        }
+        return root;
+    }
+private:
+    TreeNode* getMinimalNode(TreeNode* tn) {
+        while (tn->left != nullptr) {
+            tn = tn->left;
+        }
+        return tn;
     }
 };
 
