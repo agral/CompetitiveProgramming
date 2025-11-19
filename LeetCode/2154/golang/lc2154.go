@@ -5,7 +5,7 @@ package lc2154
 // Subjective level: easy
 // Solved on: 2025-11-19
 func findFinalValue(nums []int, original int) int {
-	m := map[int]bool{}
+	m := make(map[int]bool, len(nums))
 	for _, num := range nums {
 		m[num] = true
 	}
