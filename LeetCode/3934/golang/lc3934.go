@@ -13,14 +13,14 @@ package lc3934
 // Solved on: 2026-11-25
 func smallestUniqueSubarray(nums []int) int {
 	// constants for computing the rolling hash (base=23, modulus=1e9+7):
-	const BASE = int64(23)
-	const MOD int64 = 1_000_000_007
+	const BASE int64 = int64(23)
+	const MOD int64 = int64(1_000_000_007)
 
 	L := len(nums)
 
 	// precompute BASE^i (modulo MOD); for all the possible values of 1 <= i <= L:
 	POWERS := make([]int64, L+1)
-	POWERS[0] = 1
+	POWERS[0] = int64(1)
 	for i := 1; i <= L; i++ {
 		POWERS[i] = (POWERS[i-1] * BASE) % MOD
 	}
@@ -36,7 +36,7 @@ func smallestUniqueSubarray(nums []int) int {
 
 		// compute the entire hash of the first window ( [0, winSize) )
 		hash := int64(0)
-		for i := 0; i < winSize; i++ {
+		for i := range winSize {
 			hash = (hash*BASE + nums64[i]) % MOD
 		}
 		hashToCount[hash] = 1 // OK, the hash of the first window is now counted.
@@ -46,7 +46,7 @@ func smallestUniqueSubarray(nums []int) int {
 		for offset := 1; offset <= L-winSize; offset++ {
 			// remove from current hash the value contributed by the leftmost element (leaving):
 			leaving := POWERS[winSize-1] * nums64[offset-1] % MOD
-			hash = (hash - leaving) % MOD
+			hash = (hash + MOD - leaving) % MOD
 
 			// shift the remaining elements one power up:
 			hash = (hash * BASE) % MOD
@@ -68,11 +68,12 @@ func smallestUniqueSubarray(nums []int) int {
 		return false
 	}
 
-	for i := 1; i < L; i++ { // try increasing sizes of the window, from 1 to L-1.
-		if windowContainsUniqueSubarray(i) {
-			return i
+	for winSize := 1; winSize < L; winSize++ { // try increasing sizes of the window, from 1 to L-1.
+		if windowContainsUniqueSubarray(winSize) {
+			return winSize
 		}
 	}
 
 	return L // if none of the subarrays were unique, the entire array itself is definitely unique.
 }
+
